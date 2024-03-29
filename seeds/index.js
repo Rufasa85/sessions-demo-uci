@@ -1,5 +1,5 @@
 const { User, Game } = require("../models");
-const sequelize = require("../config/connection11")
+const sequelize = require("../config/connection")
 const userSeeds = [
   {
     email: "cats@meow.com",

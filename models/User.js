@@ -24,6 +24,10 @@ User.init({
         beforeCreate: obj=>{
             obj.password = bcrypt.hashSync(obj.password,5);
             return obj
+        },
+        beforeUpdate: obj=>{
+            obj.password = bcrypt.hashSync(obj.password,5);
+            return obj
         }  
     }
 });

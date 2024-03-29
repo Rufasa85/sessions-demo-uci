@@ -5,7 +5,6 @@ const allRoutes = require('./controllers');
 const session = require("express-session")
 
 const sequelize = require('./config/connection');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 // Sets up the Express App
 // =============================================================
@@ -17,18 +16,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const sess = {
-  secret:process.env.SESSION_SECRET,
-  cookie: {
-    maxAge:1000*60*60*2
-  },
-  resave: false,
-  saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize
-  })
-};
+    secret: 'keyboard cat',
+    cookie: {},
+    resave:false,
+    saveUninitialized:false
+  }
 
-app.use(session(sess));
+  app.use(session(sess));
 
 // Static directory
 app.use(express.static('public'));
@@ -44,4 +38,3 @@ sequelize.sync({ force: false }).then(function() {
     console.log('App listening on PORT ' + PORT);
     });
 });
-

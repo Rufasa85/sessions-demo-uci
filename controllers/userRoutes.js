@@ -55,6 +55,10 @@ router.get("/", async (req, res) => {
       if(!bcrypt.compareSync(req.body.password,foundUser.password)){
         return res.status(401).json({msg:"invalid email/password combo"})
       }
+      req.session.user = {
+        id:foundUser.id,
+        email:foundUser.email
+      }
       return res.json(foundUser);
     } catch (err) {
       console.log(err);
