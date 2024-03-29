@@ -34,6 +34,10 @@ router.get("/", async (req, res) => {
         email:req.body.email,
         password:req.body.password
       });
+      req.session.user = {
+        id:data.id,
+        email:data.email
+      }
       res.status(201).json(data);
     } catch (err) {
       console.log(err);
@@ -66,16 +70,21 @@ router.get("/", async (req, res) => {
     }
   });
   
-  router.delete("/:id", async (req, res) => {
+  router.delete("/", async (req, res) => {
     try {
+      if(!req.session.user){
+        return res.status(401).json({msg:"login first!"})
+      }
+     
       const data = await User.destroy({
         where: {
-          id: req.params.id,
+          id: req.session.user.id,
         },
       });
       if (data === 0) {
         return res.status(404).json({ msg: "no such User exists!" });
       }
+      req.session.destroy();
       res.json(data);
     } catch (err) {
       console.log(err);
@@ -85,6 +94,12 @@ router.get("/", async (req, res) => {
   
   router.put("/:id", async (req, res) => {
     try {
+      if(!req.session.user){
+        return res.status(401).json({msg:"login first!"})
+      }
+      if(req.session.user.id!=req.params.id){
+        return res.status(403).json({msg:"not your account!"})
+      }
       const data = await User.update(req.body, {
         where: {
           id: req.params.id,
